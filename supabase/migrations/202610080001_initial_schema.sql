@@ -129,6 +129,11 @@ alter table public.batch_recipients enable row level security;
 alter table public.send_attempts enable row level security;
 alter table public.api_rate_limits enable row level security;
 
+grant usage on schema public to authenticated, service_role;
+grant select, insert, update, delete on public.profiles, public.templates, public.gmail_connections,
+  public.attachments, public.batches, public.batch_recipients, public.send_attempts, public.api_rate_limits
+  to service_role;
+
 drop policy if exists profiles_owner_access on public.profiles;
 create policy profiles_owner_access on public.profiles for all to authenticated using (user_id = (select auth.uid())) with check (user_id = (select auth.uid()));
 drop policy if exists templates_owner_access on public.templates;

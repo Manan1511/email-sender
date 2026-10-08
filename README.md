@@ -36,7 +36,7 @@ For a type/build check without credentials, run `npm run build`, `npm run check:
 
 ## Supabase setup
 
-Create a Supabase project, then apply the migration. It creates owner-scoped tables, a private `attachments` bucket, storage policies, and service-role-only RPCs for rate limits, batch creation, dispatch leases, quotas, and retries. Do not expose the service-role key to the browser.
+Create a Supabase project, then apply the migration. It creates owner-scoped tables, a private `attachments` bucket, storage policies, and service-role-only RPCs for rate limits, batch creation, dispatch leases, quotas, and retries. It also grants the server role the table access it needs while keeping browser access behind owner-scoped grants and RLS. Do not expose the service-role key to the browser.
 
 In Supabase Auth, enable Google and configure its OAuth client ID and secret. Add the site and local callback URLs to the Supabase redirect allow-list. Google sign-in requests only identity scopes; Gmail sending is authorized separately by a server-side OAuth flow.
 
