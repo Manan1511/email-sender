@@ -25,7 +25,7 @@ React, Vite, TypeScript, Tailwind CSS, shadcn/ui, TipTap, Netlify Functions, Sup
 
 1. Install Node.js 22 and dependencies: `npm install`.
 2. Copy `.env.example` to `.env.local` and fill in a Supabase project URL and publishable/anon key.
-3. Apply `supabase/migrations/202610080001_initial_schema.sql` in the Supabase SQL Editor, or link the Supabase CLI to the project and run `supabase db push`.
+3. Apply every SQL file in `supabase/migrations/` in timestamp order, or link the Supabase CLI to the project and run `npx supabase db push`.
 4. Configure Google sign-in in Supabase Auth and add the local redirect URL `http://localhost:8888` to the Supabase redirect allow-list.
 5. Add the server-only Google and Supabase values from `.env.example` to the local Netlify environment.
 6. Start the app through Netlify Dev so its functions are available: `npx netlify dev`.
@@ -36,7 +36,7 @@ For a type/build check without credentials, run `npm run build`, `npm run check:
 
 ## Supabase setup
 
-Create a Supabase project, then apply the migration. It creates owner-scoped tables, a private `attachments` bucket, storage policies, and service-role-only RPCs for rate limits, batch creation, dispatch leases, quotas, and retries. It also grants the server role the table access it needs while keeping browser access behind owner-scoped grants and RLS. Do not expose the service-role key to the browser.
+Create a Supabase project, then apply every migration in `supabase/migrations/` in timestamp order. They create owner-scoped tables, a private `attachments` bucket, storage policies, and service-role-only RPCs for rate limits, batch creation, dispatch leases, quotas, and retries. They also grant the server role the table access it needs while keeping browser access behind owner-scoped grants and RLS. Do not expose the service-role key to the browser.
 
 In Supabase Auth, enable Google and configure its OAuth client ID and secret. Add the site and local callback URLs to the Supabase redirect allow-list. Google sign-in requests only identity scopes; Gmail sending is authorized separately by a server-side OAuth flow.
 
@@ -71,7 +71,7 @@ See [Privacy](public/privacy.html) and [Terms](public/terms.html). Profiles and 
 
 ## Before launch
 
-- Apply the Supabase migration and configure Google/Supabase OAuth.
+- Apply all Supabase migrations and configure Google/Supabase OAuth.
 - Add the production Netlify environment variables; do not commit `.env.local`.
 - Confirm the actual free-plan quotas and Google OAuth testing/verification requirements for your accounts.
 - Test only with controlled addresses first, including Gmail reconnection, attachment handling, and uncertain-result review.
