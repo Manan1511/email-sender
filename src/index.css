@@ -1,0 +1,72 @@
+@import "tailwindcss";
+@import "@fontsource-variable/geist";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: #f5f7f5;
+  --foreground: #1d2a23;
+  --card: #ffffff;
+  --card-foreground: #1d2a23;
+  --popover: #ffffff;
+  --popover-foreground: #1d2a23;
+  --primary: #1f765a;
+  --primary-foreground: #ffffff;
+  --secondary: #edf3ef;
+  --secondary-foreground: #385246;
+  --muted: #f2f5f2;
+  --muted-foreground: #78857d;
+  --accent: #e8f3ed;
+  --accent-foreground: #24674f;
+  --destructive: #b8453c;
+  --border: #e3e9e4;
+  --input: #dce4de;
+  --ring: #70a891;
+  --radius: 0.75rem;
+  --sidebar: #fbfcfb;
+  --sidebar-foreground: #26372e;
+  --sidebar-border: #e7ece8;
+  color-scheme: light;
+  font-family: 'Geist Variable', Geist, ui-sans-serif, system-ui, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@theme inline {
+  --font-sans: 'Geist Variable', Geist, ui-sans-serif, system-ui, sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+@layer base {
+  * { @apply border-border; }
+  html, body, #root { min-height: 100%; }
+  body { @apply bg-background text-foreground; margin: 0; }
+  button, input, select, textarea { font: inherit; }
+  button { cursor: pointer; }
+  button:disabled { cursor: not-allowed; }
+  :focus-visible { outline: 2px solid #388568; outline-offset: 2px; }
+  ::selection { background: #d7eee2; color: #173a2c; }
+}

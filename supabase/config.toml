@@ -1,0 +1,18 @@
+project_id = "email-sender"
+
+[api]
+enabled = true
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[auth]
+site_url = "http://localhost:8888"
+additional_redirect_urls = ["http://localhost:8888", "http://localhost:5173"]
+enable_signup = true
+
+[auth.external.google]
+enabled = true
+client_id = "env(SUPABASE_AUTH_GOOGLE_CLIENT_ID)"
+secret = "env(SUPABASE_AUTH_GOOGLE_SECRET)"
+redirect_uri = ""

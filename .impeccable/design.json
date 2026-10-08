@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-08T18:10:00Z",
+  "title": "Design System: Email Sender",
+  "extensions": {
+    "colorMeta": {
+      "primary": { "role": "primary", "displayName": "Workspace Emerald", "canonical": "#1f765a", "tonalRamp": ["#0b2b20", "#104631", "#175c42", "#1f765a", "#478d72", "#76a993", "#a8c9b7", "#e3f0e9"] },
+      "primary-deep": { "role": "primary", "displayName": "Forest Panel", "canonical": "#173d31", "tonalRamp": ["#071a14", "#0c2c21", "#12372a", "#173d31", "#426458", "#718c81", "#a9bbb2", "#e4ebe7"] },
+      "background": { "role": "neutral", "displayName": "Mist Canvas", "canonical": "#f5f7f5", "tonalRamp": ["#252b26", "#444b45", "#626a63", "#818982", "#a2aaa3", "#c3cac4", "#dde2de", "#f5f7f5"] },
+      "surface": { "role": "neutral", "displayName": "Paper Surface", "canonical": "#ffffff", "tonalRamp": ["#252b26", "#444b45", "#626a63", "#818982", "#a2aaa3", "#c3cac4", "#e1e5e2", "#ffffff"] },
+      "foreground": { "role": "neutral", "displayName": "Ink Green", "canonical": "#1d2a23", "tonalRamp": ["#101713", "#1d2a23", "#354139", "#505b54", "#6c766f", "#89928c", "#afb6b1", "#e6e9e7"] },
+      "muted": { "role": "neutral", "displayName": "Quiet Sage", "canonical": "#78857d", "tonalRamp": ["#252b26", "#3b443e", "#525c55", "#69746c", "#78857d", "#9ca69f", "#c4cbc6", "#edf0ee"] },
+      "secondary-foreground": { "role": "neutral", "displayName": "Secondary Green Gray", "canonical": "#385246", "tonalRamp": ["#14221b", "#23372c", "#385246", "#52685b", "#6e8175", "#91a097", "#bdc8c1", "#edf1ee"] },
+      "border": { "role": "neutral", "displayName": "Soft Divider", "canonical": "#e3e9e4", "tonalRamp": ["#252b26", "#3b443e", "#525c55", "#69746c", "#8d9890", "#b3bcb5", "#d0d7d1", "#e3e9e4"] },
+      "accent-soft": { "role": "neutral", "displayName": "Pale Mint", "canonical": "#e8f3ed", "tonalRamp": ["#17372a", "#315743", "#4d745e", "#6e917d", "#91ad9e", "#b5cbbf", "#d1e1d7", "#e8f3ed"] },
+      "destructive": { "role": "tertiary", "displayName": "Brick Error", "canonical": "#b8453c", "tonalRamp": ["#39100e", "#5b1915", "#7d241e", "#9d342c", "#b8453c", "#cd6b62", "#e0a09a", "#f4e0de"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Sign-in story headline." },
+      "headline": { "displayName": "Headline", "purpose": "Workspace page titles." },
+      "title": { "displayName": "Title", "purpose": "Panel and section headings." },
+      "body": { "displayName": "Body", "purpose": "Primary interface copy and controls." },
+      "label": { "displayName": "Utility label", "purpose": "Compact, tracked captions and field labels." }
+    },
+    "shadows": [
+      { "name": "panel-lift", "value": "0 2px 6px rgba(34,60,41,.025)", "purpose": "Subtle separation for primary workspace panels." },
+      { "name": "letter-illustration", "value": "0 25px 65px rgba(7,24,16,.17)", "purpose": "Distinct depth for the sign-in mail preview illustration." }
+    ],
+    "motion": [
+      { "name": "control-transition", "value": "150ms ease", "purpose": "Quiet hover state changes on navigation and controls." },
+      { "name": "spinner", "value": "900ms linear infinite", "purpose": "Loading indicator rotation." }
+    ],
+    "breakpoints": [
+      { "name": "workspace-collapse", "value": "900px", "purpose": "Switch desktop workspace navigation and panel layout to compact responsive layout." },
+      { "name": "auth-single-column", "value": "920px", "purpose": "Collapse the two-column sign-in layout." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The emerald-filled primary action used to advance a campaign or save a decision.",
+      "html": "<button class=\"ds-btn-primary\">Review emails <span aria-hidden=\"true\">→</span></button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 36px; padding: 0 12px; border: 0; border-radius: 9px; background: #1f765a; color: #fff; font: 500 14px/1.4 'Geist Variable', Geist, system-ui, sans-serif; cursor: pointer; transition: background 150ms ease, transform 150ms ease; } .ds-btn-primary:hover { background: #195f49; } .ds-btn-primary:focus-visible { outline: 2px solid #388568; outline-offset: 2px; } .ds-btn-primary:active { transform: translateY(1px); }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "A restrained secondary action for choosing files and adjusting profile details.",
+      "html": "<button class=\"ds-btn-outline\">Add attachment</button>",
+      "css": ".ds-btn-outline { min-height: 32px; padding: 0 11px; border: 1px solid #e3e9e4; border-radius: 8px; background: #fff; color: #385246; font: 500 13px/1.4 'Geist Variable', Geist, system-ui, sans-serif; cursor: pointer; transition: background 150ms ease, border-color 150ms ease; } .ds-btn-outline:hover { border-color: #cbd7ce; background: #f2f5f2; } .ds-btn-outline:focus-visible { outline: 2px solid #388568; outline-offset: 2px; } .ds-btn-outline:active { background: #edf3ef; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "field-default",
+      "description": "A clear white field for subject lines and sender details.",
+      "html": "<label class=\"ds-field-wrap\"><span>Subject line</span><input class=\"ds-field\" value=\"[Company Name] × ForkThis\" /></label>",
+      "css": ".ds-field-wrap { display: grid; gap: 7px; color: #526159; font: 600 11px/1.4 'Geist Variable', Geist, system-ui, sans-serif; } .ds-field { width: 100%; min-height: 40px; padding: 0 11px; border: 1px solid #dce4de; border-radius: 8px; background: #fff; color: #1d2a23; font: 400 13px/1.5 'Geist Variable', Geist, system-ui, sans-serif; } .ds-field:hover { border-color: #c6d4ca; } .ds-field:focus-visible { outline: 2px solid #388568; outline-offset: 2px; border-color: #70a891; }"
+    },
+    {
+      "name": "Workspace Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "A white bordered grouping surface for each major stage or supporting task.",
+      "html": "<section class=\"ds-card\"><h3>Message</h3><p>Write and personalize your sponsor note.</p></section>",
+      "css": ".ds-card { padding: 22px 23px; border: 1px solid #e4eae5; border-radius: 12px; background: #fff; box-shadow: 0 2px 6px rgba(34,60,41,.025); color: #1d2a23; font-family: 'Geist Variable', Geist, system-ui, sans-serif; } .ds-card h3 { margin: 0 0 8px; color: #293a30; font-size: 15px; font-weight: 600; } .ds-card p { margin: 0; color: #78857d; font-size: 13px; line-height: 1.5; }"
+    },
+    {
+      "name": "Selected Navigation Item",
+      "kind": "nav",
+      "refersTo": "navigation-selected",
+      "description": "The pale mint active row inside the desktop workspace rail.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-item\" href=\"#\"><svg aria-hidden=\"true\" viewBox=\"0 0 20 20\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"><path d=\"m3 9 7-6 7 6v8H5V9m5 8v-5\"/></svg><span>New campaign</span></a></nav>",
+      "css": ".ds-nav { width: 100%; font-family: 'Geist Variable', Geist, system-ui, sans-serif; } .ds-nav-item { display: flex; align-items: center; gap: 11px; padding: 10px 11px; border-radius: 8px; background: #eaf4ed; color: #1c694d; text-decoration: none; font-size: 12px; font-weight: 620; transition: background 150ms ease, color 150ms ease; } .ds-nav-item:hover { background: #f1f5f1; color: #335947; } .ds-nav-item:focus-visible { outline: 2px solid #388568; outline-offset: 2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Quiet Dispatch Desk",
+    "overview": "The interface treats sponsor outreach as careful correspondence. Its deep forest sign-in panel gives the product a distinct entry point, while the signed-in workspace returns to pale neutral surfaces, crisp green states, and restrained typography. The feeling is composed and practical: every screen makes the next sending decision easy to locate without turning the workflow into a decorative campaign.\n\nThe interface is desktop-led but keeps its sign-in and working surfaces within the viewport on narrow screens. Information density comes from compact labels, tables, and aligned form fields; generous white panels separate each task. Green signals progress, connection, and the primary action. The UI uses icons for navigation and status, with no logo asset beyond its simple outlined mail mark.",
+    "keyCharacteristics": [
+      "Cool, near-white work surfaces framed by forest green.",
+      "Compact Geist typography with strongly tracked utility labels.",
+      "Thin borders and small, functional shadows establish grouping.",
+      "Green states communicate readiness and successful connection."
+    ],
+    "rules": [
+      { "name": "The Green Means Ready Rule", "body": "Reserve saturated green for the main action, selected workflow state, and positive connection or completion signals.", "section": "colors" },
+      { "name": "The One Sans Rule", "body": "Use the shipped Geist family across interface roles; differentiate hierarchy with size, weight, and tracking.", "section": "typography" }
+    ],
+    "dos": [
+      "Do use the mist canvas and white panels to keep long forms and recipient tables calm and readable.",
+      "Do use emerald consistently for the primary action, active workflow, and positive connection states.",
+      "Do keep captions small and tracked while maintaining a clear 14px default body size.",
+      "Do make focus visible with the existing green outline treatment."
+    ],
+    "donts": [
+      "Don't add extra accent hues to routine workspace controls; the shipped system uses green as its sole action accent.",
+      "Don't use heavy shadows to distinguish ordinary cards; borders and tonal surfaces are the primary grouping tools.",
+      "Don't turn compact utility labels into body copy; preserve the clear size contrast between labels and content."
+    ]
+  }
+}

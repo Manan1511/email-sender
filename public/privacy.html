@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#173d31" />
+    <title>Privacy · Email Sender</title>
+    <link rel="stylesheet" href="/policy.css" />
+  </head>
+  <body>
+    <main class="policy">
+      <a class="policy-brand" href="/">Email Sender <span>· CSI VIT</span></a>
+      <span class="eyebrow">PRIVACY</span>
+      <h1>Your outreach stays yours.</h1>
+      <p class="updated">Last updated: 8 October 2026</p>
+      <p>Email Sender helps CSI VIT members prepare and send sponsorship outreach. This page describes the data stored by the application and how it is used. Before public launch, the team should publish a monitored support contact here.</p>
+
+      <h2>What the app stores</h2>
+      <p>Your Google sign-in identity, sender name and phone number, saved templates, contact spreadsheet rows, personalized message content, attachment metadata and files, and recipient-level send results. Gmail sending requires a separate Google authorization.</p>
+
+      <h2>How Gmail access works</h2>
+      <p>The app requests permission to send email through the connected Google account. It does not request permission to read inbox messages. The Gmail address must match the account used to sign in. A refresh token is encrypted server-side and used only to refresh Gmail access for sending. Disconnecting Gmail removes that token from the app; you can also revoke access in your Google Account.</p>
+
+      <h2>Who can see your data</h2>
+      <p>Private database and storage policies restrict workspace records to their owner. Server functions process a batch to validate recipients and send individual Gmail messages. Supabase provides authentication, database, and private file storage; Netlify runs the website and server functions; Google handles sign-in and Gmail sending. Their own privacy terms apply to those services.</p>
+
+      <h2>Retention and deletion</h2>
+      <p>Batch contact rows, personalized messages, outcomes, and related files are deleted after 30 days. Saved templates and profile details remain until you delete them or your account. You can delete campaign history, unused attachments, or the whole account from Account settings. Account deletion removes the app’s stored Gmail token, workspace records, and private files. Google may keep copies of messages in the sender’s Sent folder under its own policies.</p>
+
+      <h2>Limits and delivery</h2>
+      <p>Usage caps and provider limits can pause sending. A success in the results means Gmail accepted the send request; it does not confirm inbox delivery. If a request’s outcome is uncertain, the app marks it for review and asks you to check Sent before any resend.</p>
+
+      <h2>Questions</h2>
+      <p>For privacy requests, contact the CSI VIT team that operates this workspace. Add a team-managed contact address before inviting users beyond the initial group.</p>
+      <a class="back-link" href="/">← Back to Email Sender</a>
+    </main>
+  </body>
+</html>

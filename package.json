@@ -1,0 +1,63 @@
+{
+  "name": "email-sender",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && tsc -p tsconfig.functions.json && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check:functions": "tsc -p tsconfig.functions.json",
+    "dev:netlify": "npx netlify-cli dev"
+  },
+  "dependencies": {
+    "@fontsource-variable/geist": "^5.3.0",
+    "@phosphor-icons/react": "2.1.10",
+    "@supabase/supabase-js": "2.117.3",
+    "@tiptap/extension-link": "3.31.4",
+    "@tiptap/react": "3.31.4",
+    "@tiptap/starter-kit": "3.31.4",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "papaparse": "5.7.0",
+    "radix-ui": "^1.7.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "read-excel-file": "9.3.12",
+    "sanitize-html": "2.18.0",
+    "tailwind-merge": "3.7.0",
+    "zod": "4.1.12"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@netlify/functions": "6.0.2",
+    "@tailwindcss/vite": "4.3.3",
+    "@testing-library/dom": "10.4.2",
+    "@testing-library/jest-dom": "7.0.1",
+    "@testing-library/react": "16.3.3",
+    "@testing-library/user-event": "14.6.7",
+    "@types/node": "^24.13.3",
+    "@types/papaparse": "5.5.2",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@types/sanitize-html": "2.16.2",
+    "@vitejs/plugin-react": "^6.1.1",
+    "eslint": "10.12.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.6",
+    "globals": "^17.12.0",
+    "jsdom": "27.0.1",
+    "prettier": "3.9.9",
+    "tailwindcss": "4.3.3",
+    "typescript": "~6.0.2",
+    "typescript-eslint": "^8.69.0",
+    "vite": "8.3.4",
+    "vitest": "5.0.3"
+  },
+  "packageManager": "npm",
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
