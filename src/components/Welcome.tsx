@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { ArrowRight, Check, Envelope, GoogleLogo, Info, LockKey, Sparkle, WarningCircle } from '@phosphor-icons/react'
+import { Check, Envelope, Info, LockKey, Sparkle, WarningCircle } from '@phosphor-icons/react'
 import { Button } from '../components/ui/button'
+import { GoogleBrandMark } from './GoogleBrandMark'
 import { hasSupabaseConfig } from '../lib/supabase'
 
 export function Welcome({ error, busy, onSignIn }: { error: string; busy: boolean; onSignIn: () => void }) {
@@ -20,7 +21,7 @@ export function Welcome({ error, busy, onSignIn }: { error: string; busy: boolea
     <section className="auth-panel"><div className="auth-panel-inner"><span className="eyebrow">YOUR OUTREACH DESK</span><h2>Sign in to get started</h2><p>Use your Google account to open your private workspace. Gmail sending is connected separately when you’re ready.</p>
       {!hasSupabaseConfig && <div className="setup-note"><Info size={18} /><div><b>Workspace setup needed</b><span>Add your Supabase keys to <code>.env.local</code>, then restart. Setup steps are in the README.</span></div></div>}
       {(error || gmailError) && <div className="inline-alert error"><WarningCircle size={17} />{gmailError || error}</div>}
-      <Button className="google-button" size="lg" disabled={!hasSupabaseConfig || busy} onClick={onSignIn}><GoogleLogo size={19} weight="bold" /> Continue with Google <ArrowRight size={17} /></Button>
+      <Button className="google-button" size="lg" disabled={!hasSupabaseConfig || busy} onClick={onSignIn}><GoogleBrandMark size={18} /> Sign in with Google</Button>
       <div className="auth-separator"><span /> SEPARATE SENDER PERMISSION <span /></div>
       <div className="auth-step"><span>1</span><div><b>Sign in to your workspace</b><small>Your private profile, templates, and history.</small></div></div><div className="auth-step"><span>2</span><div><b>Connect the Gmail you send from</b><small>Only send permission. Your address stays read-only.</small></div></div>
       <div className="auth-privacy"><LockKey size={15} /> Connections and recipient lists stay private to your account.</div><div className="auth-links"><a href="/privacy.html">Privacy</a><span>·</span><a href="/terms.html">Terms</a></div>

@@ -11,5 +11,6 @@ const options: sanitizeHtml.IOptions = {
 export function sanitizeMessage(html: string) { return sanitizeHtml(html, options) }
 
 export function htmlToText(html: string) {
-  return sanitizeHtml(html, { allowedTags: [], allowedAttributes: {}, textFilter: (text) => text }).replace(/\s+/g, ' ').trim()
+  const separated = html.replace(/<br\s*\/?>/gi, ' ').replace(/<\/(?:p|h2|h3|li|blockquote)\s*>/gi, ' ')
+  return sanitizeHtml(separated, { allowedTags: [], allowedAttributes: {}, textFilter: (text) => text }).replace(/\s+/g, ' ').trim()
 }

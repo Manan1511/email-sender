@@ -2,15 +2,15 @@
 name: Email Sender
 description: A quiet, clear workspace for personalized sponsorship outreach.
 colors:
-  primary: "#1f765a"
-  primary-deep: "#173d31"
-  background: "#f5f7f5"
+  primary: "#143381"
+  primary-deep: "#101f44"
+  background: "#f5f7f7"
   surface: "#ffffff"
-  foreground: "#1d2a23"
-  muted: "#78857d"
-  secondary-foreground: "#385246"
-  border: "#e3e9e4"
-  accent-soft: "#e8f3ed"
+  foreground: "#19242e"
+  muted: "#72818b"
+  secondary-foreground: "#2f425b"
+  border: "#e3e8e9"
+  accent-soft: "#e8eef3"
   destructive: "#b8453c"
 typography:
   display:
@@ -81,35 +81,35 @@ components:
 
 **Creative North Star: "The Quiet Dispatch Desk"**
 
-The interface treats sponsor outreach as careful correspondence. Its deep forest sign-in panel gives the product a distinct entry point, while the signed-in workspace returns to pale neutral surfaces, crisp green states, and restrained typography. The feeling is composed and practical: every screen makes the next sending decision easy to locate without turning the workflow into a decorative campaign.
+The interface treats sponsor outreach as careful correspondence. Its deep navy sign-in panel gives the product a distinct entry point, while the signed-in workspace returns to pale blue-white surfaces, crisp navy accents, and restrained typography. The feeling is composed and practical: every screen makes the next sending decision easy to locate without turning the workflow into a decorative campaign.
 
-The interface is desktop-led but keeps its sign-in and working surfaces within the viewport on narrow screens. Information density comes from compact labels, tables, and aligned form fields; generous white panels separate each task. Green signals progress, connection, and the primary action. The UI uses icons for navigation and status, with no logo asset beyond its simple outlined mail mark.
+The interface is desktop-led but keeps its sign-in and working surfaces within the viewport on narrow screens. Information density comes from compact labels, tables, and aligned form fields; generous white panels separate each task. Navy signals active actions and selection, while red and amber retain their status meanings. Google sign-in uses Google's official multicolor G mark.
 
 **Key Characteristics:**
-- Cool, near-white work surfaces framed by forest green.
+- Cool, near-white work surfaces framed by deep navy.
 - Compact Geist typography with strongly tracked utility labels.
 - Thin borders and small, functional shadows establish grouping.
-- Green states communicate readiness and successful connection.
+- Navy accents communicate active actions and selection.
 
 ## Colors
 
-The palette pairs a muted emerald action color with soft green-tinted neutrals and a darker forest entry surface.
+The palette pairs a deep navy action color with soft blue-white neutrals and a darker navy entry surface.
 
 ### Primary
-- **Workspace Emerald** (`{colors.primary}`): Primary buttons, selected navigation, active workflow steps, and successful or connected states.
-- **Forest Panel** (`{colors.primary-deep}`): The dark sign-in story surface and its high-contrast identity area.
+- **Workspace Navy** (`{colors.primary}`): Primary buttons, selected navigation, and active workflow steps.
+- **Navy Panel** (`{colors.primary-deep}`): The dark sign-in story surface and its high-contrast identity area.
 
 ### Neutral
 - **Mist Canvas** (`{colors.background}`): The signed-in workspace background.
 - **Paper Surface** (`{colors.surface}`): Cards, forms, and navigation surfaces.
-- **Ink Green** (`{colors.foreground}`): Main text, chosen for clear contrast without pure black.
-- **Quiet Sage** (`{colors.muted}`): Supporting copy, captions, and secondary information.
+- **Navy Ink** (`{colors.foreground}`): Main text, chosen for clear contrast without pure black.
+- **Quiet Blue Gray** (`{colors.muted}`): Supporting copy, captions, and secondary information.
 - **Soft Divider** (`{colors.border}`): Fine card, field, and navigation boundaries.
-- **Pale Mint** (`{colors.accent-soft}`): Selected navigation and low-emphasis green states.
+- **Pale Blue** (`{colors.accent-soft}`): Selected navigation and low-emphasis accent states.
 - **Brick Error** (`{colors.destructive}`): Destructive controls and error feedback.
 
 ### Named Rules
-**The Green Means Ready Rule.** Reserve saturated green for the main action, selected workflow state, and positive connection or completion signals.
+**The Navy Means Action Rule.** Reserve saturated navy for the main action, selected workflow state, and primary controls.
 
 ## Typography
 
@@ -138,7 +138,7 @@ At 900px the app shell moves its navigation above the content and stacks campaig
 
 ## Elevation & Depth
 
-Depth is mostly tonal: white panels sit on a subtly green-tinted canvas, with fine borders doing most of the grouping. Shadows stay faint on cards and controls; the sign-in letter illustration uses a larger soft shadow as a single focal object. Focus rings and state colors communicate interaction more clearly than elevation.
+Depth is mostly tonal: white panels sit on a subtly blue-tinted canvas, with fine borders doing most of the grouping. Shadows stay faint on cards and controls; the sign-in letter illustration uses a larger soft shadow as a single focal object. Focus rings and state colors communicate interaction more clearly than elevation.
 
 ### Shadow Vocabulary
 - **Panel lift** (`0 2px 6px rgba(34,60,41,.025)`): Barely lifts workspace cards from the canvas.
@@ -152,37 +152,37 @@ Most UI surfaces use gently rounded corners (9–12px), with smaller radii for c
 
 ### Buttons
 - **Shape:** Compact rounded rectangles (roughly 8–9px corners); default controls are 32–36px high.
-- **Primary:** Emerald fill and white text; compact horizontal padding with a small directional or task icon where useful.
+- **Primary:** Navy fill and white text; compact horizontal padding with a small directional or task icon where useful.
 - **Secondary / Ghost:** White or transparent surfaces with a quiet border or muted hover fill.
-- **Hover / Focus:** Background and text shift gently on hover; keyboard focus receives a visible green outline or ring. Disabled controls reduce opacity.
+- **Hover / Focus:** Background and text shift gently on hover; keyboard focus receives a visible navy outline or ring. Disabled controls reduce opacity.
 
 ### Cards / Containers
 - **Corner Style:** Gently rounded (12px for main panels).
 - **Background:** White on the light mist canvas.
 - **Shadow Strategy:** Thin border first, faint shadow second.
-- **Border:** Fine pale green-gray stroke.
+- **Border:** Fine pale blue-gray stroke.
 - **Internal Padding:** Approximately 22–23px for task panels, with smaller 9–13px padding for compact status and connection cards.
 
 ### Inputs / Fields
-- **Style:** White background, fine sage-gray stroke, and 8–9px corners.
-- **Focus:** A visible green outline/ring separates keyboard focus from the resting border.
+- **Style:** White background, fine blue-gray stroke, and 8–9px corners.
+- **Focus:** A visible navy outline/ring separates keyboard focus from the resting border.
 - **Error / Disabled:** Error feedback uses brick red and a pale warm surface; disabled buttons use reduced opacity.
 
 ### Navigation
-- **Style:** Persistent light sidebar on desktop with compact icon-and-label rows. Hover uses a light neutral fill; the selected item uses pale mint and green text/icon. Small count pills remain subdued.
+- **Style:** Persistent light sidebar on desktop with compact icon-and-label rows. Hover uses a light neutral fill; the selected item uses pale blue and navy text/icon. Small count pills remain subdued.
 
 ### Campaign Stepper
-The four-stage campaign sequence uses numbered circles and thin connector lines. Completed steps turn pale mint, the active step becomes solid emerald with a soft outer ring, and future steps remain outlined and quiet.
+The four-stage campaign sequence uses numbered circles and thin connector lines. Completed steps turn pale blue, the active step becomes solid navy with a soft outer ring, and future steps remain outlined and quiet.
 
 ## Do's and Don'ts
 
 ### Do:
 - **Do** use the mist canvas and white panels to keep long forms and recipient tables calm and readable.
-- **Do** use emerald consistently for the primary action, active workflow, and positive connection states.
+- **Do** use navy consistently for the primary action and active workflow.
 - **Do** keep captions small and tracked while maintaining a clear 14px default body size.
-- **Do** make focus visible with the existing green outline treatment.
+- **Do** make focus visible with the existing navy outline treatment.
 
 ### Don't:
-- **Don't** add extra accent hues to routine workspace controls; the shipped system uses green as its sole action accent.
+- **Don't** add extra accent hues to routine workspace controls; the shipped system uses navy as its sole action accent.
 - **Don't** use heavy shadows to distinguish ordinary cards; borders and tonal surfaces are the primary grouping tools.
 - **Don't** turn compact utility labels into body copy; preserve the clear size contrast between labels and content.

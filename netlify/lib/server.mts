@@ -17,6 +17,19 @@ export function adminClient() {
   const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY
   if (!url || !key) throw new Error('Missing server configuration: SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.')
+  if (key.startsWith('sb_secret_')) return createClient(url, key, { auth: { autoRefreshToken: false, persistSession: false } })
+  if (key.startsWith('sb_publishable_')) throw new Error('Missing server configuration: SUPABASE_SERVICE_ROLE_KEY must be a server-side service_role or sb_secret_ key, not a publishable key.')
+  const encodedPayload = key.split('.')[1]
+  if (encodedPayload) {
+    try {
+      const payload = JSON.parse(Buffer.from(encodedPayload, 'base64url').toString('utf8')) as { role?: unknown }
+      if (typeof payload.role === 'string' && payload.role !== 'service_role') {
+        throw new Error('Missing server configuration: SUPABASE_SERVICE_ROLE_KEY must be a server-side service_role or sb_secret_ key, not an anon key.')
+      }
+    } catch (error) {
+      if (error instanceof Error && error.message.startsWith('Missing server configuration:')) throw error
+    }
+  }
   return createClient(url, key, { auth: { autoRefreshToken: false, persistSession: false } })
 }
 

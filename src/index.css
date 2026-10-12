@@ -4,28 +4,28 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #f5f7f5;
-  --foreground: #1d2a23;
+  --background: #f5f7f7;
+  --foreground: #19242e;
   --card: #ffffff;
-  --card-foreground: #1d2a23;
+  --card-foreground: #19242e;
   --popover: #ffffff;
-  --popover-foreground: #1d2a23;
-  --primary: #1f765a;
+  --popover-foreground: #19242e;
+  --primary: #143381;
   --primary-foreground: #ffffff;
-  --secondary: #edf3ef;
-  --secondary-foreground: #385246;
-  --muted: #f2f5f2;
-  --muted-foreground: #78857d;
-  --accent: #e8f3ed;
-  --accent-foreground: #24674f;
+  --secondary: #edf1f3;
+  --secondary-foreground: #2f425b;
+  --muted: #f2f5f5;
+  --muted-foreground: #72818b;
+  --accent: #e8eef3;
+  --accent-foreground: #183673;
   --destructive: #b8453c;
-  --border: #e3e9e4;
-  --input: #dce4de;
-  --ring: #70a891;
+  --border: #e3e8e9;
+  --input: #dce2e4;
+  --ring: #6683b2;
   --radius: 0.75rem;
-  --sidebar: #fbfcfb;
-  --sidebar-foreground: #26372e;
-  --sidebar-border: #e7ece8;
+  --sidebar: #fbfcfc;
+  --sidebar-foreground: #202e3d;
+  --sidebar-border: #e7ebec;
   color-scheme: light;
   font-family: 'Geist Variable', Geist, ui-sans-serif, system-ui, sans-serif;
   font-synthesis: none;
@@ -67,6 +67,6 @@
   button, input, select, textarea { font: inherit; }
   button { cursor: pointer; }
   button:disabled { cursor: not-allowed; }
-  :focus-visible { outline: 2px solid #388568; outline-offset: 2px; }
-  ::selection { background: #d7eee2; color: #173a2c; }
+  :focus-visible { outline: 2px solid #284d95; outline-offset: 2px; }
+  ::selection { background: #e0e2e5; color: #102241; }
 }
