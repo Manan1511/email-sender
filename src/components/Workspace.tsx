@@ -165,6 +165,10 @@ export function Workspace({ session }: { session: Session }) {
     }
   }, [table, emailHeader]);
   const contacts = contactResult.contacts;
+  const validEmailCount = contacts.filter(
+    (contact) => contact.status === "ready",
+  ).length;
+  const contactSkippedCount = contacts.length - validEmailCount;
   const sender = useMemo(
     () => ({ ...profile, email: gmail?.email || profile.email }),
     [profile, gmail],
@@ -943,8 +947,8 @@ export function Workspace({ session }: { session: Session }) {
                   sheetName={sheetName}
                   emailHeader={emailHeader}
                   contacts={contacts}
-                  ready={readyCount}
-                  skipped={skippedCount}
+                  validEmails={validEmailCount}
+                  skipped={contactSkippedCount}
                   error={contactResult.error || fileError}
                   busy={busy}
                   input={contactsInput}
@@ -961,7 +965,7 @@ export function Workspace({ session }: { session: Session }) {
                     setFileError("");
                   }}
                   onNext={() => {
-                    if (readyCount) setStep("compose");
+                    if (validEmailCount) setStep("compose");
                   }}
                 />
               )}
@@ -1159,7 +1163,7 @@ function ContactsPanel(props: {
   sheetName: string;
   emailHeader: string | null;
   contacts: Contact[];
-  ready: number;
+  validEmails: number;
   skipped: number;
   error: string;
   busy: boolean;
@@ -1178,7 +1182,7 @@ function ContactsPanel(props: {
     sheetName,
     emailHeader,
     contacts,
-    ready,
+    validEmails,
     skipped,
     error,
   } = props;
@@ -1289,7 +1293,7 @@ function ContactsPanel(props: {
             <div className="import-stats">
               <span className="stat-ready">
                 <CheckCircle size={16} />
-                {ready} ready
+                {validEmails} valid {validEmails === 1 ? "email" : "emails"}
               </span>
               <span className={skipped ? "stat-skipped" : ""}>
                 <WarningCircle size={16} />
@@ -1305,7 +1309,7 @@ function ContactsPanel(props: {
                   {table.headers.slice(0, 6).map((header) => (
                     <th key={header}>{header}</th>
                   ))}
-                  <th>Check</th>
+                  <th>Email check</th>
                 </tr>
               </thead>
               <tbody>
@@ -1323,10 +1327,16 @@ function ContactsPanel(props: {
                       <Badge
                         variant="outline"
                         className={`status-pill ${contact.status}`}
+                        aria-label={
+                          contact.status === "ready"
+                            ? `Valid email address: ${contact.email}`
+                            : `Skipped: ${contact.reason || "Check this email address."}`
+                        }
+                        title={contact.reason || "Valid email address."}
                       >
                         {contact.status === "ready" ? (
                           <>
-                            <Check size={12} /> Ready
+                            <Check size={12} /> Valid
                           </>
                         ) : (
                           <>
@@ -1346,20 +1356,23 @@ function ContactsPanel(props: {
             )}
           </div>
           <div className="contact-footnote">
-            <Info size={15} /> The app uses the first valid row for each email
-            address. It skips rows with missing message values.
+            <Info size={15} /> This step checks email addresses and skips
+            duplicates. The app checks message fields after you write your
+            message.
           </div>
         </>
       )}
       <div className="step-actions">
         <span className="step-action-note">
           {table
-            ? `${ready} contacts are ready to review`
+            ? validEmails
+              ? `${validEmails} valid ${validEmails === 1 ? "email address" : "email addresses"}. Continue to write your message.`
+              : "Select the email column or upload a corrected file."
             : "Your file is used to prepare this campaign"}
         </span>
         <Button
           className="primary-button"
-          disabled={!table || !ready}
+          disabled={!table || !validEmails}
           onClick={props.onNext}
         >
           Continue <ArrowRight size={16} />
