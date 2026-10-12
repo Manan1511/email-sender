@@ -129,6 +129,8 @@
 .contact-table td { max-width: 180px; height: 36px; overflow: hidden; padding: 0 10px; border-bottom: 1px solid #f0f3f3; color: #4c5e6a; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
 .contact-table .row-num { color: #99a4a7; font-variant-numeric: tabular-nums; }.muted-dash { color: #c1c9c2; }
 .status-pill { width: fit-content; display: inline-flex; align-items: center; gap: 4px; padding: 4px 7px; border-radius: 5px; font-size: 9px; font-weight: 600; white-space: nowrap; }
+.contact-table td.contact-check-cell { height: auto; min-width: 150px; max-width: 220px; overflow: visible; padding-block: 8px; white-space: normal; }
+.contact-issue { display: block; margin-top: 4px; color: #9d5149; font-size: 9px; line-height: 1.35; white-space: normal; }
 .status-pill.ready, .status-pill.sent { color: #255385; background: #edf5f7; }.status-pill.skipped, .status-pill.failed { color: #9d5149; background: #fff0ee; }.status-pill.queued, .status-pill.sending { color: #56768b; background: #eef5f8; }.status-pill.needs_review { color: #9b7040; background: #fcf4e6; }
 .table-more { padding: 8px 10px; color: #848f96; background: #fbfcfc; font-size: 9px; text-align: center; }
 .contact-footnote { display: flex; align-items: center; gap: 7px; padding: 12px 0 15px; color: #818f95; font-size: 10px; }.contact-footnote svg { color: #567d99; }

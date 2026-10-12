@@ -42,10 +42,10 @@ describe('Gmail message encoding', () => {
     expect(() => buildGmailRawMessage({ ...input, subject: 'Hello\r\nBcc: attacker@example.com' })).toThrow(/control characters/i)
   })
 
-  it('rejects invalid sender and recipient addresses before building a message', () => {
+  it('rejects malformed sender and recipient address formats before building a message', () => {
     const input = { fromName: 'Sender', fromEmail: 'bad\nfrom@example.com', to: 'poc@example.com', subject: 'Hi', html: '', text: '', attachments: [] }
 
-    expect(() => buildGmailRawMessage(input)).toThrow(/valid email/i)
+    expect(() => buildGmailRawMessage(input)).toThrow(/correct format/i)
     expect(() => buildGmailRawMessage({ ...input, fromEmail: 'sender@gmail.com', to: 'poc@example.com,other@example.com' })).toThrow(/one recipient/i)
   })
 })

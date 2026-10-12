@@ -105,7 +105,20 @@ type PreviewRow = Contact & {
   personalized: ReturnType<typeof personalizeDraft>;
   previewStatus: "ready" | "skipped";
   previewReason?: string;
+  contactStatus: "complete" | "attention";
+  contactReason?: string;
 };
+const senderPlaceholderNames = new Set([
+  "yourname",
+  "youremail",
+  "yourphonenumber",
+]);
+const normalizePlaceholderName = (value: string) =>
+  value
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLocaleLowerCase()
+    .replace(/[^a-z0-9]/g, "");
 const stepList: Array<{ id: Step; title: string; subtitle: string }> = [
   { id: "contacts", title: "Contacts", subtitle: "Upload a contact list" },
   { id: "compose", title: "Write", subtitle: "Write and personalize" },
@@ -165,10 +178,6 @@ export function Workspace({ session }: { session: Session }) {
     }
   }, [table, emailHeader]);
   const contacts = contactResult.contacts;
-  const validEmailCount = contacts.filter(
-    (contact) => contact.status === "ready",
-  ).length;
-  const contactSkippedCount = contacts.length - validEmailCount;
   const sender = useMemo(
     () => ({ ...profile, email: gmail?.email || profile.email }),
     [profile, gmail],
@@ -185,17 +194,35 @@ export function Workspace({ session }: { session: Session }) {
         const missing = personalized.missing.length
           ? `Missing value for ${personalized.missing.map((name) => `[${name}]`).join(", ")}.`
           : "";
+        const missingContactFields = personalized.missing.filter(
+          (name) => !senderPlaceholderNames.has(normalizePlaceholderName(name)),
+        );
+        const missingContactValues = missingContactFields.length
+          ? `Missing value for ${missingContactFields.map((name) => `[${name}]`).join(", ")}.`
+          : "";
+        const contactWarnings = [contact.reason, missingContactValues].filter(
+          (warning): warning is string => Boolean(warning),
+        );
+        const previewWarnings = [contact.reason, missing].filter(
+          (warning): warning is string => Boolean(warning),
+        );
         const previewStatus =
           contact.status === "ready" && !missing ? "ready" : "skipped";
         return {
           ...contact,
           personalized,
           previewStatus,
-          previewReason: contact.reason || missing || undefined,
+          previewReason: previewWarnings.join(" ") || undefined,
+          contactStatus: contactWarnings.length ? "attention" : "complete",
+          contactReason: contactWarnings.join(" ") || undefined,
         };
       }),
     [contacts, subject, bodyHtml, sender],
   );
+  const completeContactCount = previews.filter(
+    (item) => item.contactStatus === "complete",
+  ).length;
+  const needsAttentionCount = previews.length - completeContactCount;
   const readyCount = previews.filter(
     (item) => item.previewStatus === "ready",
   ).length;
@@ -927,7 +954,7 @@ export function Workspace({ session }: { session: Session }) {
                   </h1>
                   <p>
                     {step === "contacts"
-                      ? "Upload a CSV or Excel file. Check each email before you continue."
+                      ? "Upload a CSV or Excel file. Check for missing fields and email formatting."
                       : step === "compose"
                         ? "Write one message. Add contact fields to personalize each email."
                         : "Check each recipient and message. Send a test email before you send the batch."}
@@ -946,9 +973,9 @@ export function Workspace({ session }: { session: Session }) {
                   sheets={sheets}
                   sheetName={sheetName}
                   emailHeader={emailHeader}
-                  contacts={contacts}
-                  validEmails={validEmailCount}
-                  skipped={contactSkippedCount}
+                  contacts={previews}
+                  complete={completeContactCount}
+                  needsAttention={needsAttentionCount}
                   error={contactResult.error || fileError}
                   busy={busy}
                   input={contactsInput}
@@ -965,7 +992,7 @@ export function Workspace({ session }: { session: Session }) {
                     setFileError("");
                   }}
                   onNext={() => {
-                    if (validEmailCount) setStep("compose");
+                    if (table && contacts.length) setStep("compose");
                   }}
                 />
               )}
@@ -1162,9 +1189,9 @@ function ContactsPanel(props: {
   sheets: Array<{ name: string; table: ContactTable }>;
   sheetName: string;
   emailHeader: string | null;
-  contacts: Contact[];
-  validEmails: number;
-  skipped: number;
+  contacts: PreviewRow[];
+  complete: number;
+  needsAttention: number;
   error: string;
   busy: boolean;
   input: React.RefObject<HTMLInputElement | null>;
@@ -1182,8 +1209,8 @@ function ContactsPanel(props: {
     sheetName,
     emailHeader,
     contacts,
-    validEmails,
-    skipped,
+    complete,
+    needsAttention,
     error,
   } = props;
   return (
@@ -1293,11 +1320,11 @@ function ContactsPanel(props: {
             <div className="import-stats">
               <span className="stat-ready">
                 <CheckCircle size={16} />
-                {validEmails} valid {validEmails === 1 ? "email" : "emails"}
+                {complete} complete
               </span>
-              <span className={skipped ? "stat-skipped" : ""}>
+              <span className={needsAttention ? "stat-skipped" : ""}>
                 <WarningCircle size={16} />
-                {skipped} skipped
+                {needsAttention} flagged
               </span>
             </div>
           </div>
@@ -1309,7 +1336,7 @@ function ContactsPanel(props: {
                   {table.headers.slice(0, 6).map((header) => (
                     <th key={header}>{header}</th>
                   ))}
-                  <th>Email check</th>
+                  <th>Data check</th>
                 </tr>
               </thead>
               <tbody>
@@ -1323,27 +1350,32 @@ function ContactsPanel(props: {
                         )}
                       </td>
                     ))}
-                    <td>
+                    <td className="contact-check-cell">
                       <Badge
                         variant="outline"
-                        className={`status-pill ${contact.status}`}
+                        className={`status-pill ${contact.contactStatus === "complete" ? "ready" : "skipped"}`}
                         aria-label={
-                          contact.status === "ready"
-                            ? `Valid email address: ${contact.email}`
-                            : `Skipped: ${contact.reason || "Check this email address."}`
+                          contact.contactStatus === "complete"
+                            ? `Complete: ${contact.email}`
+                            : `Needs attention: ${contact.contactReason || "Check this row."}`
                         }
-                        title={contact.reason || "Valid email address."}
+                        title={contact.contactReason || "Email format only; mailbox existence is not checked."}
                       >
-                        {contact.status === "ready" ? (
+                        {contact.contactStatus === "complete" ? (
                           <>
-                            <Check size={12} /> Valid
+                            <Check size={12} /> Complete
                           </>
                         ) : (
                           <>
-                            <WarningCircle size={12} /> Skip
+                            <WarningCircle size={12} /> Needs attention
                           </>
                         )}
                       </Badge>
+                      {contact.contactReason && (
+                        <small className="contact-issue">
+                          {contact.contactReason}
+                        </small>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -1356,26 +1388,28 @@ function ContactsPanel(props: {
             )}
           </div>
           <div className="contact-footnote">
-            <Info size={15} /> This step checks email addresses and skips
-            duplicates. The app checks message fields after you write your
-            message.
+            <Info size={15} /> Email format only; the app cannot confirm whether
+            an address exists. Required contact fields and duplicate addresses
+            are checked. Sender details are checked next.
           </div>
         </>
       )}
       <div className="step-actions">
         <span className="step-action-note">
           {table
-            ? validEmails
-              ? `${validEmails} valid ${validEmails === 1 ? "email address" : "email addresses"}. Continue to write your message.`
-              : "Select the email column or upload a corrected file."
+            ? contacts.length
+              ? needsAttention
+                ? `${needsAttention} row${needsAttention === 1 ? " needs" : "s need"} attention. Continue anyway to compose; flagged rows will still be skipped until corrected.`
+                : `${complete} contact${complete === 1 ? " is" : "s are"} complete. Continue to write your message.`
+              : "No contact rows found in this file."
             : "Your file is used to prepare this campaign"}
         </span>
         <Button
           className="primary-button"
-          disabled={!table || !validEmails}
+          disabled={!table || !contacts.length}
           onClick={props.onNext}
         >
-          Continue <ArrowRight size={16} />
+          {needsAttention ? "Continue anyway" : "Continue"} <ArrowRight size={16} />
         </Button>
       </div>
     </Card>

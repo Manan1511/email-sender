@@ -20,8 +20,8 @@ const encodeHeader = (value: string) => /[^\x20-\x7e]/.test(value) ? `=?UTF-8?B?
 const encodeBase64 = (bytes: Uint8Array) => Buffer.from(bytes).toString('base64').replace(/.{1,76}/g, '$&\r\n').trimEnd()
 
 export function buildGmailRawMessage(input: GmailMessageInput): string {
-  if (!emailPattern.test(input.fromEmail)) throw new Error('Enter a valid email for the sender.')
-  if (!emailPattern.test(input.to)) throw new Error('Choose one recipient with a valid email address.')
+  if (!emailPattern.test(input.fromEmail)) throw new Error('Enter a sender email address in the correct format.')
+  if (!emailPattern.test(input.to)) throw new Error('Choose one recipient with an email address in the correct format.')
   const fromName = encodeHeader(safeHeader(input.fromName, 'Sender name'))
   const subject = encodeHeader(safeHeader(input.subject, 'Subject'))
   const to = safeHeader(input.to, 'Recipient')

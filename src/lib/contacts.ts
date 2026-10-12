@@ -73,7 +73,7 @@ export function validateContacts(table: ContactTable, emailHeader: string | null
     const fields = Object.fromEntries(table.headers.map((header, index) => [header, values[index] ?? '']))
     let reason: string | undefined
     if (targetIndex === undefined || targetIndex < 0) reason = 'Choose an email column before reviewing this contact.'
-    else if (!emailPattern.test(email)) reason = 'Enter one valid email address.'
+    else if (!emailPattern.test(email)) reason = 'Enter one email address in the correct format.'
     else if (claimed.has(email.toLocaleLowerCase())) reason = 'duplicate email address; first occurrence is kept.'
     else claimed.add(email.toLocaleLowerCase())
     return {

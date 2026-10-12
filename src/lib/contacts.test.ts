@@ -22,16 +22,25 @@ describe('contact imports', () => {
     })
   })
 
-  it('skips blank rows, invalid addresses, and repeated valid recipients with reasons', () => {
+  it('flags malformed address formats and repeated recipients with reasons', () => {
     const table = parseCsv(
       'Company Name,POC Name,Email ID\nExample,Ada,ada@example.com\n,,\nBad Row,Bob,not-an-email\nDuplicate,Ada,ADA@example.com\n',
     )
 
     expect(validateContacts(table, 'Email ID')).toMatchObject([
       { status: 'ready', email: 'ada@example.com' },
-      { status: 'skipped', email: 'not-an-email', reason: expect.stringContaining('valid') },
+      { status: 'skipped', email: 'not-an-email', reason: expect.stringContaining('format') },
       { status: 'skipped', email: 'ADA@example.com', reason: expect.stringContaining('duplicate') },
     ])
+  })
+
+  it('checks address format without claiming to verify that a mailbox exists', () => {
+    const table = parseCsv('Company Name,POC Name,Email ID\nExample,Ada,nobody@does-not-exist.invalid')
+
+    expect(validateContacts(table, 'Email ID')[0]).toMatchObject({
+      status: 'ready',
+      email: 'nobody@does-not-exist.invalid',
+    })
   })
 
   it('normalizes headers and rejects ambiguous duplicates', () => {

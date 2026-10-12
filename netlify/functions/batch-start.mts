@@ -38,7 +38,7 @@ export default async (request: Request) => {
     if (!connection) return json({ error: 'Connect Gmail before starting a batch.' }, 400)
     if (connection.reauth_required) return json({ error: 'Reconnect Gmail before starting a batch.' }, 400)
     const contacts = validateContacts(table as ContactTable, emailHeader)
-    if (!contacts.some((contact) => contact.status === 'ready')) return json({ error: 'No valid recipient emails were found in this file.' }, 400)
+    if (!contacts.some((contact) => contact.status === 'ready')) return json({ error: 'No recipient rows have an email address in the correct format.' }, 400)
     const safeHtml = sanitizeMessage(bodyHtml)
     const attachmentRows = attachmentIds.length ? await admin.from('attachments').select('id,name,mime_type,size,storage_path,uploaded_at').eq('user_id', user.id).not('uploaded_at', 'is', null).in('id', attachmentIds) : { data: [], error: null }
     if (attachmentRows.error) throw attachmentRows.error
