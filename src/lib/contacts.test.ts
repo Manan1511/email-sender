@@ -43,6 +43,27 @@ describe('contact imports', () => {
     })
   })
 
+  it('flags likely provider-domain typos as advisory issues without changing the address', () => {
+    const table = parseCsv('Company Name,POC Name,Email ID\nAcme,Ada,mananshah1511@gmangil.com\nAcme,Bob,bob@gmial.com')
+    const rows = validateContacts(table, 'Email ID')
+
+    expect(rows[0]).toMatchObject({
+      status: 'ready',
+      email: 'mananshah1511@gmangil.com',
+      warning: expect.stringContaining('gmail.com'),
+    })
+    expect(rows[1]).toMatchObject({ status: 'ready', warning: expect.stringContaining('gmail.com') })
+  })
+
+  it('does not warn for known providers or unrelated company domains', () => {
+    const table = parseCsv('Company Name,POC Name,Email ID\nAcme,Ada,ada@gmail.com\nAcme,Bob,bob@mail.com\nAcme,Cam,cam@gmx.com\nAcme,Dee,dee@acme.example')
+
+    for (const row of validateContacts(table, 'Email ID')) {
+      expect(row.status).toBe('ready')
+      expect(row).not.toHaveProperty('warning')
+    }
+  })
+
   it('normalizes headers and rejects ambiguous duplicates', () => {
     expect(normalizeHeader(' PÓC-Name ')).toBe('pocname')
     expect(() => parseCsv('Email ID,email-id\na@example.com,b@example.com')).toThrow(/duplicate header/i)

@@ -1,5 +1,6 @@
 import type { Config } from '@netlify/functions'
 import Papa from 'papaparse'
+import { emailDomainWarning } from '../../src/lib/contacts.ts'
 import { authenticate, errorResponse } from '../lib/server.mts'
 
 const safeCell = (value: unknown) => {
@@ -16,7 +17,7 @@ export default async (request: Request) => {
     if (error) throw error
     const csv = Papa.unparse({
       fields: ['Company Name', 'POC Name', 'Email', 'Source row', 'Status', 'Attempts', 'Gmail message ID', 'Reason'],
-      data: (data || []).map((item) => [item.company_name, item.poc_name, item.email, item.source_row, item.status, item.attempt_count, item.gmail_message_id, item.reason].map(safeCell)),
+      data: (data || []).map((item) => [item.company_name, item.poc_name, item.email, item.source_row, item.status, item.attempt_count, item.gmail_message_id, [item.reason, emailDomainWarning(item.email)].filter(Boolean).join(' ')].map(safeCell)),
     })
     return new Response(`\uFEFF${csv}`, { headers: { 'content-type': 'text/csv; charset=utf-8', 'content-disposition': `attachment; filename="email-batch-${id}.csv"`, 'cache-control': 'no-store', 'x-content-type-options': 'nosniff' } })
   } catch (error) {

@@ -10,7 +10,7 @@ import {
 } from "react";
 import type { Session } from "@supabase/supabase-js";
 import type { Contact, ContactTable } from "../lib/contacts";
-import { parseCsv, validateContacts } from "../lib/contacts";
+import { emailDomainWarning, parseCsv, validateContacts } from "../lib/contacts";
 import { personalizeDraft, type SenderProfile } from "../lib/personalize";
 import { starterBody, starterSubject } from "../lib/starter";
 import { api, downloadBatchCsv } from "../lib/api";
@@ -200,10 +200,10 @@ export function Workspace({ session }: { session: Session }) {
         const missingContactValues = missingContactFields.length
           ? `Missing value for ${missingContactFields.map((name) => `[${name}]`).join(", ")}.`
           : "";
-        const contactWarnings = [contact.reason, missingContactValues].filter(
+        const contactWarnings = [contact.reason, contact.warning, missingContactValues].filter(
           (warning): warning is string => Boolean(warning),
         );
-        const previewWarnings = [contact.reason, missing].filter(
+        const previewWarnings = [contact.reason, contact.warning, missing].filter(
           (warning): warning is string => Boolean(warning),
         );
         const previewStatus =
@@ -1359,7 +1359,7 @@ function ContactsPanel(props: {
                             ? `Complete: ${contact.email}`
                             : `Needs attention: ${contact.contactReason || "Check this row."}`
                         }
-                        title={contact.contactReason || "Email format only; mailbox existence is not checked."}
+                        title={contact.contactReason || "Email format checked; mailbox existence is not checked."}
                       >
                         {contact.contactStatus === "complete" ? (
                           <>
@@ -1388,9 +1388,10 @@ function ContactsPanel(props: {
             )}
           </div>
           <div className="contact-footnote">
-            <Info size={15} /> Email format only; the app cannot confirm whether
-            an address exists. Required contact fields and duplicate addresses
-            are checked. Sender details are checked next.
+            <Info size={15} /> The app checks email format and possible domain
+            spelling errors. It cannot confirm whether an address exists.
+            Required contact fields and duplicate addresses are checked.
+            Sender details are checked next.
           </div>
         </>
       )}
@@ -1399,7 +1400,7 @@ function ContactsPanel(props: {
           {table
             ? contacts.length
               ? needsAttention
-                ? `${needsAttention} row${needsAttention === 1 ? " needs" : "s need"} attention. Continue anyway to compose; flagged rows will still be skipped until corrected.`
+                ? `${needsAttention} row${needsAttention === 1 ? " needs" : "s need"} attention. Continue anyway to compose. Format errors and missing message values must be corrected before those rows can be sent. Possible typos can still be sent as entered.`
                 : `${complete} contact${complete === 1 ? " is" : "s are"} complete. Continue to write your message.`
               : "No contact rows found in this file."
             : "Your file is used to prepare this campaign"}
@@ -1782,8 +1783,10 @@ function ReviewPanel(props: {
                     {row.companyName || row.email || `Row ${row.rowNumber}`}
                   </small>
                 </span>
-                <span className={`review-status ${row.previewStatus}`}>
-                  {row.previewStatus === "ready" ? (
+                <span className={`review-status ${row.previewStatus === "skipped" || row.warning ? "skipped" : "ready"}`}>
+                  {row.previewStatus === "ready" && row.warning ? (
+                    <><WarningCircle size={14} /> Check address</>
+                  ) : row.previewStatus === "ready" ? (
                     <>
                       <CheckCircle size={14} /> Ready
                     </>
@@ -1806,7 +1809,7 @@ function ReviewPanel(props: {
             </span>
             <small>Email preview</small>
             <span className="preview-window-tag">
-              {props.selected?.previewStatus === "ready" ? "Ready" : "Skipped"}
+              {props.selected?.previewStatus === "ready" ? props.selected.warning ? "Check address" : "Ready" : "Skipped"}
             </span>
           </div>
           {props.selected ? (
@@ -1918,6 +1921,7 @@ function ResultsPanel(props: {
   const active = batch ? ["queued", "sending"].includes(batch.status) : false;
   const retryable = props.rows.filter((row) => row.status === "failed");
   const review = props.rows.filter((row) => row.status === "needs_review");
+  const spellingIssues = props.rows.filter((row) => emailDomainWarning(row.email)).length;
   const allIds = [...retryable, ...review].map((row) => row.id);
   const completed = success + failed + uncertain + skipped;
   const percentage = total
@@ -1992,6 +1996,10 @@ function ResultsPanel(props: {
             <small>Skipped</small>
           </div>
         </div>
+        <div className="batch-inline-warning">
+          <Info size={16} /> Accepted means Gmail accepted the send request.
+          Delivery is not confirmed. Check Gmail for bounce emails.
+        </div>
         {batch?.error_message && (
           <div className="batch-inline-warning">
             <Info size={16} />
@@ -2003,7 +2011,9 @@ function ResultsPanel(props: {
         <div className="section-title-row">
           <div>
             <h2>Emails by contact</h2>
-            <p>Check the status of each email and review any issue.</p>
+            <p>{spellingIssues
+              ? `${spellingIssues} address${spellingIssues === 1 ? " needs" : "es need"} a spelling check. Review the issue below.`
+              : "Check the status of each email and review any issue."}</p>
           </div>
           <div className="table-actions">
             <Button variant="outline" size="sm" onClick={props.onExport}>
@@ -2038,6 +2048,7 @@ function ResultsPanel(props: {
               {props.rows.map((row) => {
                 const selectable =
                   row.status === "failed" || row.status === "needs_review";
+                const spellingWarning = emailDomainWarning(row.email);
                 return (
                   <tr key={row.id}>
                     <td>
@@ -2077,6 +2088,11 @@ function ResultsPanel(props: {
                       {row.reason ||
                         row.gmail_message_id ||
                         (row.status === "sent" ? "Accepted by Gmail" : "—")}
+                      {spellingWarning && (
+                        <small className="contact-issue">
+                          {spellingWarning}
+                        </small>
+                      )}
                     </td>
                     <td>
                       {selectable && (

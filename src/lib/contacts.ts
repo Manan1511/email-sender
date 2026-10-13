@@ -10,6 +10,7 @@ export type Contact = {
   fields: Record<string, string>
   status: 'ready' | 'skipped'
   reason?: string
+  warning?: string
 }
 
 export function normalizeHeader(value: string) {
@@ -40,6 +41,35 @@ export function parseCsv(source: string): ContactTable {
 }
 
 const emailPattern = /^[^\s@,;<>]+@[^\s@,;<>]+\.[^\s@,;<>]+$/
+
+// These spelling suggestions are advisory; they do not verify domain or mailbox existence.
+const emailProviders = ['gmail.com', 'googlemail.com', 'outlook.com', 'hotmail.com', 'live.com', 'msn.com', 'yahoo.com', 'yahoo.co.uk', 'icloud.com', 'me.com', 'mac.com', 'proton.me', 'protonmail.com', 'aol.com', 'aim.com', 'mail.com', 'email.com', 'gmx.com', 'gmx.net', 'zoho.com']
+
+function spellingDistance(left: string, right: string) {
+  const distances = Array.from({ length: left.length + 1 }, (_, row) => Array.from({ length: right.length + 1 }, (_, column) => row === 0 ? column : column === 0 ? row : 0))
+  for (let row = 1; row <= left.length; row++) {
+    for (let column = 1; column <= right.length; column++) {
+      distances[row][column] = Math.min(distances[row - 1][column] + 1, distances[row][column - 1] + 1, distances[row - 1][column - 1] + Number(left[row - 1] !== right[column - 1]))
+      if (row > 1 && column > 1 && left[row - 1] === right[column - 2] && left[row - 2] === right[column - 1]) {
+        distances[row][column] = Math.min(distances[row][column], distances[row - 2][column - 2] + 1)
+      }
+    }
+  }
+  return distances[left.length][right.length]
+}
+
+export function emailDomainWarning(email: string): string | undefined {
+  if (!emailPattern.test(email)) return undefined
+  const domain = email.slice(email.lastIndexOf('@') + 1).toLowerCase()
+  if (emailProviders.includes(domain)) return undefined
+  const candidates = emailProviders.filter((provider) => Math.abs(domain.length - provider.length) <= 2)
+    .map((provider) => ({ provider, distance: spellingDistance(domain, provider) }))
+    .filter(({ provider, distance }) => distance === 1 || (distance === 2 && provider.split('.')[0].length >= 5 && domain.slice(0, 2) === provider.slice(0, 2) && domain.slice(domain.lastIndexOf('.')) === provider.slice(provider.lastIndexOf('.'))))
+    .sort((a, b) => a.distance - b.distance)
+  const closest = candidates[0]
+  if (!closest || candidates[1]?.distance === closest.distance) return undefined
+  return `Possible email typo: ${domain} resembles ${closest.provider}. Check the address before sending.`
+}
 
 export function tableFromMatrix(matrix: unknown[][]): ContactTable {
   const normalized = matrix.map((row) => row.map((cell) => cell instanceof Date ? cell.toISOString().slice(0, 10) : String(cell ?? '').trim()))
@@ -76,6 +106,7 @@ export function validateContacts(table: ContactTable, emailHeader: string | null
     else if (!emailPattern.test(email)) reason = 'Enter one email address in the correct format.'
     else if (claimed.has(email.toLocaleLowerCase())) reason = 'duplicate email address; first occurrence is kept.'
     else claimed.add(email.toLocaleLowerCase())
+    const warning = reason ? undefined : emailDomainWarning(email)
     return {
       rowNumber,
       companyName: companyIndex === undefined ? '' : values[companyIndex] ?? '',
@@ -85,6 +116,7 @@ export function validateContacts(table: ContactTable, emailHeader: string | null
       fields,
       status: reason ? 'skipped' as const : 'ready' as const,
       ...(reason ? { reason } : {}),
+      ...(warning ? { warning } : {}),
     }
   })
 }

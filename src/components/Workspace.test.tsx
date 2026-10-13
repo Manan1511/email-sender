@@ -56,7 +56,7 @@ describe("Workspace contact step", () => {
 
     expect(screen.getByText("Complete")).toBeInTheDocument();
     expect(
-      screen.getByText(/email format only; the app cannot confirm whether an address exists/i),
+      screen.getByText(/cannot confirm whether an address exists/i),
     ).toBeInTheDocument();
     expect(screen.queryByText(/valid email/i)).not.toBeInTheDocument();
     await waitFor(() =>
@@ -91,7 +91,7 @@ describe("Workspace contact step", () => {
       screen.getByText(/one email address in the correct format/i),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/flagged rows will still be skipped until corrected/i),
+      screen.getByText(/format errors and missing message values must be corrected/i),
     ).toBeInTheDocument();
     const override = screen.getByRole("button", { name: /continue anyway/i });
     expect(override).toBeEnabled();
@@ -118,6 +118,48 @@ describe("Workspace contact step", () => {
         { name: /^continue$/i },
       ),
     ).toBeEnabled();
+  });
+
+  it("flags a likely domain typo in Contacts and Review and allows the user to continue", async () => {
+    const base = apiMock.getMockImplementation()!;
+    apiMock.mockImplementation(async (name: string) => name === "profile" ? {
+      profile: { name: "Sender", email: "sender@example.com", phone: "+91 1234567890" },
+      gmail: { email: "sender@example.com", reconnectRequired: false },
+    } : base(name));
+    render(<Workspace session={session} />);
+
+    await uploadCsv("Company Name,POC Name,Email ID,Designation\nAcme,Ada,mananshah1511@gmangil.com,Founder");
+
+    expect(screen.getByText("Needs attention")).toBeInTheDocument();
+    expect(screen.getByText(/possible email typo.*gmail.com/i)).toBeInTheDocument();
+    expect(screen.queryByText(/flagged rows will still be skipped/i)).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /continue anyway/i }));
+    const reviewButton = await screen.findByRole("button", { name: /review emails/i });
+    await waitFor(() => expect(reviewButton).toBeEnabled());
+    fireEvent.click(reviewButton);
+
+    expect(await screen.findByText(/possible email typo.*gmail.com/i)).toBeInTheDocument();
+    expect(screen.getAllByText("Check address").length).toBeGreaterThan(0);
+    expect(screen.getByRole("button", { name: /send 1 email/i })).toBeEnabled();
+    expect(apiMock).not.toHaveBeenCalledWith("batch-start", expect.anything());
+  });
+
+  it("shows a spelling issue on an accepted result without claiming a delivery failure", async () => {
+    const batch = { id: "batch-1", status: "completed", created_at: "2026-10-12T19:56:00Z", total_count: 1, success_count: 1, failed_count: 0, needs_review_count: 0, skipped_count: 0, subject_template: "Test campaign" };
+    const base = apiMock.getMockImplementation()!;
+    apiMock.mockImplementation(async (name: string) => {
+      if (name === "batches") return { batches: [batch] };
+      if (name === "batch-status?id=batch-1") return { batch, recipients: [{ id: "recipient-1", email: "mananshah1511@gmangil.com", poc_name: "Ada", company_name: "Acme", source_row: 2, status: "sent", attempt_count: 1, gmail_message_id: "message-1", updated_at: batch.created_at }] };
+      return base(name);
+    });
+    render(<Workspace session={session} />);
+
+    fireEvent.click(await screen.findByRole("button", { name: /history/i }));
+    fireEvent.click(await screen.findByRole("button", { name: /^view$/i }));
+
+    expect(await screen.findByText(/possible email typo.*gmail.com/i)).toBeInTheDocument();
+    expect(screen.getByText("Accepted")).toBeInTheDocument();
+    expect(screen.getByText(/delivery is not confirmed/i)).toBeInTheDocument();
   });
 });
 

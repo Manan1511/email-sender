@@ -599,6 +599,11 @@ body {
   flex: 0 0 auto;
   color: #355f92;
 }
+.contact-issue {
+  color: #8a542e;
+  font-size: 12px;
+  line-height: 1.45;
+}
 .step-actions {
   min-height: 64px;
   margin: 0 -24px;
