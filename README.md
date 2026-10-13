@@ -28,11 +28,13 @@ React, Vite, TypeScript, Tailwind CSS, shadcn/ui, TipTap, Netlify Functions, Sup
 3. Apply every SQL file in `supabase/migrations/` in timestamp order, or link the Supabase CLI to the project and run `npx supabase db push`.
 4. Configure Google sign-in in Supabase Auth and add the local redirect URL `http://localhost:8888` to the Supabase redirect allow-list.
 5. Add the server-only Google and Supabase values from `.env.example` to the local Netlify environment.
-6. Start the app through Netlify Dev so its functions are available: `npx netlify dev`.
+6. Start the app through Netlify Dev so its functions are available: `npm run dev:netlify`.
 
 `npm run dev` starts only the Vite frontend. The protected API and background sender need Netlify Functions; use Netlify Dev for an end-to-end local run.
 
 For a type/build check without credentials, run `npm run build`, `npm run check:functions`, and `npm test`.
+
+Installation, builds, tests, and Netlify Dev prepare the server's HTML sanitizer with `npm run prepare:functions`. This generates the ignored `netlify/lib/sanitize-html.generated.mjs` bundle so Netlify's runtime can load the current sanitizer and its parser without experimental module-loading flags. Deploy with the configured `npm run build` command; no custom `NODE_OPTIONS` value is required.
 
 ## Supabase setup
 

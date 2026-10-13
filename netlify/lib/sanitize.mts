@@ -1,6 +1,7 @@
-import sanitizeHtml from 'sanitize-html'
+import type { IOptions } from 'sanitize-html'
+import sanitizeHtml from './sanitize-html.generated.mjs'
 
-const options: sanitizeHtml.IOptions = {
+const options: IOptions = {
   allowedTags: ['p', 'br', 'strong', 'b', 'em', 'i', 'u', 'a', 'ul', 'ol', 'li', 'blockquote', 'h2', 'h3'],
   allowedAttributes: { a: ['href', 'target', 'rel'] },
   allowedSchemes: ['http', 'https', 'mailto'],

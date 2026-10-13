@@ -5,6 +5,7 @@ supabase/.temp/
 .vite/
 .vite-scaffold/
 .tmp/
+/netlify/lib/sanitize-html.generated.mjs
 .env
 .env.*
 !.env.example
